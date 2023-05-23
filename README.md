@@ -111,11 +111,9 @@ ____________________________
 
 Prompts:
 
-I want it so that when I navigate with any of the arrows, the page moves in the direction of the arrows.
-
 Let's work on the content on the expanded Resume page. It should have a PDF document placed in its center that takes up most of the screen. If a user clicks it, the PDF opens up full screen like how it is on Google Drive or something (or whatever that PDF view is that lets users download or print the file).
 
-Let's work on the content on the expanded Blog page.
+Let's work on the content on the expanded Blog page. I want to have the title of the blog 
 
 Let's work on the content on the expanded Projects page.
 
@@ -134,3 +132,7 @@ Are these two many swictch components?
   - I want dragging them to involve and pressing and holding them, instead of just clicking them.
 
 Can you make the switch component(s) draggable across of the screen? But always reset it at the top right when I navigate elsewhere (to a square)?
+
+[Currently, when I click the "X" button, the navigation is based on the direction that I just came from. So for example, if I go to down from Resume to Project, then click "X", the fullScreenSquare will slide out from top to bottom as it returns to the main screen.  
+
+I don't know if this should be desirable. Wouldn't it be better to, instead, have the Project page close in the downLeft direction? Like no matter where I navigated from?]

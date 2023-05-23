@@ -5,6 +5,7 @@ import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
+import url from 'rollup-plugin-url';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -70,7 +71,14 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
+
+		url({
+      // by default, rollup-plugin-url will not handle .pdf files
+      limit: 0, // with a limit of 0, all files are processed
+      include: ['**/*.pdf'], // the glob(s) to files you want to include
+      emitFiles: true, // defaults to true
+    }),
 	],
 	watch: {
 		clearScreen: false
