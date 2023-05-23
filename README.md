@@ -105,3 +105,32 @@ Then, from within your project folder:
 npm run build
 surge public my-project.surge.sh
 ```
+
+
+____________________________
+
+Prompts:
+
+I want it so that when I navigate with any of the arrows, the page moves in the direction of the arrows.
+
+Let's work on the content on the expanded Resume page. It should have a PDF document placed in its center that takes up most of the screen. If a user clicks it, the PDF opens up full screen like how it is on Google Drive or something (or whatever that PDF view is that lets users download or print the file).
+
+Let's work on the content on the expanded Blog page.
+
+Let's work on the content on the expanded Projects page.
+
+Let's work on the content on the expanded Contact page.
+
+I'd you to add a preview of each square on the 2x2 grid home page. 
+
+I'd like you to add an optional traditional menu bar on each expanded square.
+
+Can we add a second switch component for Haitian Creole mode (where all of the text on the page - including the blogs - is converted to Haitian Creole)?
+
+And a third switch component for dark mode?
+
+Are these two many swictch components? 
+- I'd like them all to be draggable. I think it's fun to have to have these.
+  - I want dragging them to involve and pressing and holding them, instead of just clicking them.
+
+Can you make the switch component(s) draggable across of the screen? But always reset it at the top right when I navigate elsewhere (to a square)?
