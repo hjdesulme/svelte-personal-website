@@ -164,7 +164,7 @@
 				duration: 500,
 			}}
 		>
-			{selectedSquare}
+
 			{#if selectedSquare === "resume"}
 				<button
 					class="close-button top-left"
@@ -215,7 +215,9 @@
 					data-tooltip-blog="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				<!--The navigation should look like: I directly clicked into "blog"-->
+				
+				<h1 class="blog-header">Blog</h1>
+
 				<button
 					class="arrow down"
 					data-tooltip="Down to 'Contact'"
@@ -244,7 +246,9 @@
 					data-tooltip-projects="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				<!--The navigation should look like: I directly clicked into "projects"-->
+
+				<h1 class="projects-header">Projects</h1>
+
 				<button
 					class="arrow up"
 					data-tooltip="Jump up to 'Resume'"
@@ -274,7 +278,9 @@
 					data-tooltip-contact="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				<!--The navigation should look like: I directly clicked into "contact"-->
+				
+				<h1 class="contact-header">Contact</h1>
+				
 				<button
 					class="arrow up"
 					data-tooltip="Jump up to 'Blog'"
@@ -744,8 +750,8 @@
 	.resume-header {
 		position: absolute;
 		top: 60px; /* Adjust as needed */
-		left: 80px; /* Adjust as needed */
-		font-size: 1.5em; /* Adjust as class*/
+		left: 120px; /* Adjust as needed */
+		/*font-size: 1.5em; /* Adjust as class*/
 	}
 
 	.resume-png {
@@ -760,5 +766,26 @@
 		max-height: 80vh; /* Limit height to 80% of viewport height */
 		width: auto; /* Maintain aspect ratio */
 		height: auto; /* Maintain aspect ratio */
+	}
+
+	.blog-header {
+		position: absolute;
+		top: 60px; /* Adjust as needed */
+		right: 120px; /* Adjust as needed */
+		/*font-size: 1.5em; /* Adjust as class*/
+	}
+
+	.projects-header {
+		position: absolute;
+		bottom: 60px; /* Adjust as needed */
+		left: 120px; /* Adjust as needed */
+		/*font-size: 1.5em; /* Adjust as class*/
+	}
+
+	.contact-header {
+		position: absolute;
+		bottom: 60px; /* Adjust as needed */
+		right: 120px; /* Adjust as needed */
+		/*font-size: 1.5em; /* Adjust as class*/
 	}
 </style>
