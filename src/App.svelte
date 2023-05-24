@@ -1,9 +1,8 @@
 <script>
-	import { screenStore } from "./store.js";
+	import { screenStore, showSwitchStore } from "./store.js";
 	import Switch from "svelte-switch";
 	import CenterText from "./CenterText.svelte";
 	import SquareManager from "./SquareManager.svelte";
-
 
 	let showInfo = false;
 
@@ -13,11 +12,13 @@
 </script>
 
 {#if $screenStore === "desktop"}
-<div class="switcher">
-	<Switch {showInfo} on:change={toggleShowInfo} />
-</div>
-<SquareManager {showInfo} />
-<CenterText {showInfo} />
+	{#if $showSwitchStore}
+		<div class="switcher">
+			<Switch {showInfo} on:change={toggleShowInfo} />
+		</div>
+	{/if}
+	<SquareManager {showInfo} />
+	<CenterText {showInfo} />
 {:else}
 	<!-- Mobile layout code goes here -->
 	<div class="mobile-container">
@@ -57,7 +58,6 @@
 {/if}
 
 <style>
-
 	.switcher {
 		position: fixed;
 		right: 20px;
@@ -101,5 +101,4 @@
 		z-index: 2;
 		visibility: visible;
 	}
-
 </style>

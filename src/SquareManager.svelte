@@ -1,58 +1,32 @@
 <script>
-  import { screenStore } from "./store.js";
+  import { screenStore, selectedSquareStore, selectedSquareDetailsStore, navigate, showSwitchStore } from "./store.js";
   import Square from "./Square.svelte";
   import FullScreenSquare from "./FullScreenSquare.svelte";
   import { fly } from "svelte/transition";
 
-  let showSwitch = true;
-  export let selectedSquare = null;
-  export let selectedSquareDetails = {};
+  showSwitchStore.set(true);
+
+  let selectedSquare = null;
+  let selectedSquareDetails = {};
   let renderFullScreenSquare = false;
   export let showPdf = false; // initially set to false
   export let pdfURL = "/My_Resume.pdf";
+
+  // Subscribe to the selected square and its details
+  selectedSquareStore.subscribe(value => selectedSquare = value);
+  selectedSquareDetailsStore.subscribe(value => selectedSquareDetails = value);
 
   // Toggle function
   export function togglePdfImage() {
     showPdf = !showPdf;
   }
+  
   function toggleFullScreenSquare() {
     renderFullScreenSquare = false;
     setTimeout(() => {
       renderFullScreenSquare = true;
     }, 0);
   }
-
-  // Store square directions
-  export let directions = {
-    resume: {
-      up: null,
-      down: "projects",
-      left: null,
-      right: "blog",
-      downRight: "contact",
-    },
-    blog: {
-      up: null,
-      down: "contact",
-      left: "resume",
-      right: null,
-      downLeft: "projects",
-    },
-    projects: {
-      up: "resume",
-      down: null,
-      left: null,
-      right: "contact",
-      upRight: "blog",
-    },
-    contact: {
-      up: "blog",
-      down: null,
-      left: "projects",
-      right: null,
-      upLeft: "resume",
-    },
-  };
 
   export function selectSquare(square, event, direction = null) {
     if (selectedSquare) {
@@ -108,8 +82,9 @@
       };
     }
 
-    selectedSquare = square;
-    showSwitch = false;
+    selectedSquareStore.set(square); // Update the store
+    selectedSquareDetailsStore.set(selectedSquareDetails); // Update the store
+    showSwitchStore.set(false);
     if (selectedSquare) {
       toggleFullScreenSquare();
     }
@@ -117,8 +92,8 @@
 
   function deselectSquare(event) {
     event.stopPropagation();
-    selectedSquare = null;
-    showSwitch = true;
+    selectedSquareStore.set(null);
+    showSwitchStore.set(true);
   }
 </script>
 
@@ -131,8 +106,6 @@
   </div>
   {#if selectedSquare != null && renderFullScreenSquare}
     <FullScreenSquare
-      {directions}
-      {selectSquare}
       {selectedSquare}
       {selectedSquareDetails}
       {deselectSquare}
@@ -160,7 +133,5 @@
 		width: 100vw;
 		gap: 1px;
 		background: black;
-		/* Allow tooltips to overflow */
-		overflow: visible;
 	}
-  </style>
+ </style>

@@ -1,13 +1,23 @@
 <script>
 	import { fly } from "svelte/transition";
-	export let directions;
-	export let selectSquare;
+	import {
+		selectedSquareStore,
+		selectedSquareDetailsStore,
+		navigate,
+		showSwitchStore,
+	} from "./store.js";
+
 	export let selectedSquare;
 	export let selectedSquareDetails;
-	export let deselectSquare;
 	export let showPdf;
 	export let pdfURL;
 	export let togglePdfImage;
+
+	// Subscribe to store updates
+	selectedSquareStore.subscribe((value) => (selectedSquare = value));
+	selectedSquareDetailsStore.subscribe(
+		(value) => (selectedSquareDetails = value)
+	);
 </script>
 
 <div
@@ -38,7 +48,10 @@
 		<button
 			class="close-button top-left"
 			data-tooltip-resume="Back to Home"
-			on:click|stopPropagation={deselectSquare}
+			on:click|stopPropagation={() => {
+				selectedSquareStore.set(null);
+				showSwitchStore.set(true);
+			}}
 		>
 			X
 		</button>
@@ -48,8 +61,7 @@
 		<button
 			class="arrow down"
 			data-tooltip="Down to 'Projects'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.resume.down, null, "down")}
+			on:click|stopPropagation={() => navigate("down")}
 		>
 			↓
 		</button>
@@ -57,8 +69,7 @@
 		<button
 			class="arrow right"
 			data-tooltip="Take a right to 'Blog'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.resume.right, null, "right")}
+			on:click|stopPropagation={() => navigate("right")}
 		>
 			→
 		</button>
@@ -66,8 +77,7 @@
 		<button
 			class="arrow down-right"
 			data-tooltip="Dive over to 'Contact'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.resume.downRight, null, "downRight")}
+			on:click|stopPropagation={() => navigate("downRight")}
 		>
 			↘
 		</button>
@@ -97,87 +107,117 @@
 		<button
 			class="close-button top-right"
 			data-tooltip-blog="Back to Home"
-			on:click|stopPropagation={deselectSquare}>X</button
+			on:click|stopPropagation={() => {
+				selectedSquareStore.set(null);
+				showSwitchStore.set(true);
+			}}
 		>
-		<!--The navigation should look like: I directly clicked into "blog"-->
+			X
+		</button>
+
+		<h1 class="blog-header">Blog</h1>
+
 		<button
 			class="arrow down"
 			data-tooltip="Down to 'Contact'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.blog.down, null, "down")}>↓</button
+			on:click|stopPropagation={() => navigate("down")}
 		>
+			↓
+		</button>
 
 		<button
 			class="arrow left"
 			data-tooltip="Take a left to 'Resume'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.blog.left, null, "left")}>←</button
+			on:click|stopPropagation={() => navigate("left")}
 		>
+			←
+		</button>
 
 		<button
 			class="arrow down-left"
 			data-tooltip="Slide over to 'Projects'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.blog.downLeft, null, "downLeft")}>↙</button
+			on:click|stopPropagation={() => navigate("downLeft")}
 		>
+			↙
+		</button>
 	{/if}
 
 	{#if selectedSquare === "projects"}
 		<button
 			class="close-button bottom-left"
 			data-tooltip-projects="Back to Home"
-			on:click|stopPropagation={deselectSquare}>X</button
+			on:click|stopPropagation={() => {
+				selectedSquareStore.set(null);
+				showSwitchStore.set(true);
+			}}
 		>
-		<!--The navigation should look like: I directly clicked into "projects"-->
+			X
+		</button>
+
+		<h1 class="projects-header">Projects</h1>
+
 		<button
 			class="arrow up"
 			data-tooltip="Jump up to 'Resume'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.projects.up, null, "up")}>↑</button
+			on:click|stopPropagation={() => navigate("up")}
 		>
+			↑
+		</button>
 
 		<button
 			class="arrow right"
 			data-tooltip="Take a right to 'Contact'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.projects.right, null, "right")}>→</button
+			on:click|stopPropagation={() => navigate("right")}
 		>
+			→
+		</button>
 
 		<button
 			class="arrow up-right"
 			data-tooltip="Hop over to 'Blog'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.projects.upRight, null, "upRight")}>↗</button
+			on:click|stopPropagation={() => navigate("upRight")}
 		>
+			↗
+		</button>
 	{/if}
 
 	{#if selectedSquare === "contact"}
 		<button
 			class="close-button bottom-right"
 			data-tooltip-contact="Back to Home"
-			on:click|stopPropagation={deselectSquare}>X</button
+			on:click|stopPropagation={() => {
+				selectedSquareStore.set(null);
+				showSwitchStore.set(true);
+			}}
 		>
-		<!--The navigation should look like: I directly clicked into "contact"-->
+			X
+		</button>
+
+		<h1 class="contact-header">Contact</h1>
+
 		<button
 			class="arrow up"
 			data-tooltip="Jump up to 'Blog'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.contact.up, null, "up")}>↑</button
+			on:click|stopPropagation={() => navigate("up")}
 		>
+			↑
+		</button>
 
 		<button
 			class="arrow left"
 			data-tooltip="Take a left to 'Projects'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.contact.left, null, "left")}>←</button
+			on:click|stopPropagation={() => navigate("left")}
 		>
+			←
+		</button>
 
 		<button
 			class="arrow up-left"
 			data-tooltip="Leap over to 'Resume'"
-			on:click|stopPropagation={() =>
-				selectSquare(directions.contact.upLeft, null, "upLeft")}>↖</button
+			on:click|stopPropagation={() => navigate("upLeft")}
 		>
+			↖
+		</button>
 	{/if}
 </div>
 
