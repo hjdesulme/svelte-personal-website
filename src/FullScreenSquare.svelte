@@ -1,193 +1,184 @@
 <script>
-  import { fly } from "svelte/transition";
-  export let directions;
-  export let selectSquare;
-  export let selectedSquare;
-  export let selectedSquareDetails;
-  export let deselectSquare;
-  export let showPdf;
-  export let pdfURL;
-  export let togglePdfImage; 
+	import { fly } from "svelte/transition";
+	export let directions;
+	export let selectSquare;
+	export let selectedSquare;
+	export let selectedSquareDetails;
+	export let deselectSquare;
+	export let showPdf;
+	export let pdfURL;
+	export let togglePdfImage;
 </script>
 
 <div
-  class="fullScreenSquare"
-  key={selectedSquareDetails.top + "," + selectedSquareDetails.left}
-  in:fly={{
-    x:
-      selectedSquareDetails.left -
-      (window.innerWidth - selectedSquareDetails.width) / 2,
-    y:
-      selectedSquareDetails.top -
-      (window.innerHeight - selectedSquareDetails.height) / 2,
-    duration: 500,
-  }}
-  out:fly={{
-    x:
-      selectedSquareDetails.left -
-      (window.innerWidth - selectedSquareDetails.width) / 2,
-    y:
-      selectedSquareDetails.top -
-      (window.innerHeight - selectedSquareDetails.height) / 2,
-    duration: 500,
-  }}
+	class="fullScreenSquare"
+	key={selectedSquareDetails.top + "," + selectedSquareDetails.left}
+	in:fly={{
+		x:
+			selectedSquareDetails.left -
+			(window.innerWidth - selectedSquareDetails.width) / 2,
+		y:
+			selectedSquareDetails.top -
+			(window.innerHeight - selectedSquareDetails.height) / 2,
+		duration: 500,
+	}}
+	out:fly={{
+		x:
+			selectedSquareDetails.left -
+			(window.innerWidth - selectedSquareDetails.width) / 2,
+		y:
+			selectedSquareDetails.top -
+			(window.innerHeight - selectedSquareDetails.height) / 2,
+		duration: 500,
+	}}
 >
-  {selectedSquare}
-  <!-- More UI elements and navigation buttons here -->
-  {#if selectedSquare === "resume"}
-				<button
-					class="close-button top-left"
-					data-tooltip-resume="Back to Home"
-					on:click|stopPropagation={deselectSquare}
-				>
-					X
-				</button>
+	{selectedSquare}
+	<!-- More UI elements and navigation buttons here -->
+	{#if selectedSquare === "resume"}
+		<button
+			class="close-button top-left"
+			data-tooltip-resume="Back to Home"
+			on:click|stopPropagation={deselectSquare}
+		>
+			X
+		</button>
 
-				<h1 class="resume-header">Resume</h1>
+		<h1 class="resume-header">Resume</h1>
 
-				<button
-					class="arrow down"
-					data-tooltip="Down to 'Projects'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.resume.down, null, "down")}
-				>
-					↓
-				</button>
+		<button
+			class="arrow down"
+			data-tooltip="Down to 'Projects'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.resume.down, null, "down")}
+		>
+			↓
+		</button>
 
-				<button
-					class="arrow right"
-					data-tooltip="Take a right to 'Blog'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.resume.right, null, "right")}
-				>
-					→
-				</button>
+		<button
+			class="arrow right"
+			data-tooltip="Take a right to 'Blog'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.resume.right, null, "right")}
+		>
+			→
+		</button>
 
-				<button
-					class="arrow down-right"
-					data-tooltip="Dive over to 'Contact'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.resume.downRight, null, "downRight")}
-				>
-					↘
-				</button>
+		<button
+			class="arrow down-right"
+			data-tooltip="Dive over to 'Contact'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.resume.downRight, null, "downRight")}
+		>
+			↘
+		</button>
 
-				<button class="toggle-pdf" on:click={togglePdfImage}>
-					{#if showPdf} Show Image {/if}
-					{#if !showPdf} Show PDF {/if}
-				</button>
+		<button class="toggle-pdf" on:click={togglePdfImage}>
+			{#if showPdf} Show Image {/if}
+			{#if !showPdf} Show PDF {/if}
+		</button>
 
-				{#if showPdf}
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<object
-						data={"/My_Resume.pdf"}
-						type="application/pdf"
-						class="resume-pdf"
-					>
-						<!-- Display this message if the user's browser can't display the PDF -->
-						<p>It appears your web browser doesn't support iframes.</p>
-					</object>
-				{/if}
+		{#if showPdf}
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<object data={"/My_Resume.pdf"} type="application/pdf" class="resume-pdf">
+				<!-- Display this message if the user's browser can't display the PDF -->
+				<p>It appears your web browser doesn't support iframes.</p>
+			</object>
+		{/if}
 
-				{#if !showPdf}
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<a href={pdfURL} target="_blank">
-						<img
-							class="resume-png"
-							src="/My_Resume.png"
-							alt="Resume thumbnail"
-						/>
-					</a>
-				{/if}
-			{/if}
+		{#if !showPdf}
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<a href={pdfURL} target="_blank">
+				<img class="resume-png" src="/My_Resume.png" alt="Resume thumbnail" />
+			</a>
+		{/if}
+	{/if}
 
-			{#if selectedSquare === "blog"}
-				<button
-					class="close-button top-right"
-					data-tooltip-blog="Back to Home"
-					on:click|stopPropagation={deselectSquare}>X</button
-				>
-				<!--The navigation should look like: I directly clicked into "blog"-->
-				<button
-					class="arrow down"
-					data-tooltip="Down to 'Contact'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.down, null, "down")}>↓</button
-				>
+	{#if selectedSquare === "blog"}
+		<button
+			class="close-button top-right"
+			data-tooltip-blog="Back to Home"
+			on:click|stopPropagation={deselectSquare}>X</button
+		>
+		<!--The navigation should look like: I directly clicked into "blog"-->
+		<button
+			class="arrow down"
+			data-tooltip="Down to 'Contact'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.blog.down, null, "down")}>↓</button
+		>
 
-				<button
-					class="arrow left"
-					data-tooltip="Take a left to 'Resume'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.left, null, "left")}>←</button
-				>
+		<button
+			class="arrow left"
+			data-tooltip="Take a left to 'Resume'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.blog.left, null, "left")}>←</button
+		>
 
-				<button
-					class="arrow down-left"
-					data-tooltip="Slide over to 'Projects'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.downLeft, null, "downLeft")}>↙</button
-				>
-			{/if}
+		<button
+			class="arrow down-left"
+			data-tooltip="Slide over to 'Projects'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.blog.downLeft, null, "downLeft")}>↙</button
+		>
+	{/if}
 
-			{#if selectedSquare === "projects"}
-				<button
-					class="close-button bottom-left"
-					data-tooltip-projects="Back to Home"
-					on:click|stopPropagation={deselectSquare}>X</button
-				>
-				<!--The navigation should look like: I directly clicked into "projects"-->
-				<button
-					class="arrow up"
-					data-tooltip="Jump up to 'Resume'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.projects.up, null, "up")}>↑</button
-				>
+	{#if selectedSquare === "projects"}
+		<button
+			class="close-button bottom-left"
+			data-tooltip-projects="Back to Home"
+			on:click|stopPropagation={deselectSquare}>X</button
+		>
+		<!--The navigation should look like: I directly clicked into "projects"-->
+		<button
+			class="arrow up"
+			data-tooltip="Jump up to 'Resume'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.projects.up, null, "up")}>↑</button
+		>
 
-				<button
-					class="arrow right"
-					data-tooltip="Take a right to 'Contact'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.projects.right, null, "right")}>→</button
-				>
+		<button
+			class="arrow right"
+			data-tooltip="Take a right to 'Contact'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.projects.right, null, "right")}>→</button
+		>
 
-				<button
-					class="arrow up-right"
-					data-tooltip="Hop over to 'Blog'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.projects.upRight, null, "upRight")}
-					>↗</button
-				>
-			{/if}
+		<button
+			class="arrow up-right"
+			data-tooltip="Hop over to 'Blog'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.projects.upRight, null, "upRight")}>↗</button
+		>
+	{/if}
 
-			{#if selectedSquare === "contact"}
-				<button
-					class="close-button bottom-right"
-					data-tooltip-contact="Back to Home"
-					on:click|stopPropagation={deselectSquare}>X</button
-				>
-				<!--The navigation should look like: I directly clicked into "contact"-->
-				<button
-					class="arrow up"
-					data-tooltip="Jump up to 'Blog'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.contact.up, null, "up")}>↑</button
-				>
+	{#if selectedSquare === "contact"}
+		<button
+			class="close-button bottom-right"
+			data-tooltip-contact="Back to Home"
+			on:click|stopPropagation={deselectSquare}>X</button
+		>
+		<!--The navigation should look like: I directly clicked into "contact"-->
+		<button
+			class="arrow up"
+			data-tooltip="Jump up to 'Blog'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.contact.up, null, "up")}>↑</button
+		>
 
-				<button
-					class="arrow left"
-					data-tooltip="Take a left to 'Projects'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.contact.left, null, "left")}>←</button
-				>
+		<button
+			class="arrow left"
+			data-tooltip="Take a left to 'Projects'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.contact.left, null, "left")}>←</button
+		>
 
-				<button
-					class="arrow up-left"
-					data-tooltip="Leap over to 'Resume'"
-					on:click|stopPropagation={() =>
-						selectSquare(directions.contact.upLeft, null, "upLeft")}>↖</button
-				>
-			{/if}
+		<button
+			class="arrow up-left"
+			data-tooltip="Leap over to 'Resume'"
+			on:click|stopPropagation={() =>
+				selectSquare(directions.contact.upLeft, null, "upLeft")}>↖</button
+		>
+	{/if}
 </div>
 
 <style>
@@ -204,7 +195,7 @@
 		z-index: 1000;
 	}
 
-  .close-button {
+	.close-button {
 		position: absolute;
 		background-color: #444;
 		color: white;
@@ -253,7 +244,7 @@
 		left: auto !important;
 	}
 
-  .close-button.top-left:hover:before {
+	.close-button.top-left:hover:before {
 		opacity: 1;
 	}
 
@@ -269,7 +260,7 @@
 		opacity: 1;
 	}
 
-  	/* Tooltip CSS for each button position */
+	/* Tooltip CSS for each button position */
 	/* Basic styling for the tooltips */
 	.close-button[data-tooltip-resume]:before,
 	.close-button[data-tooltip-blog]:before,
@@ -328,7 +319,7 @@
 		transform: translateX(50%);
 	}
 
-  .arrow {
+	.arrow {
 		position: relative;
 		background-color: #444;
 		color: white;
@@ -354,7 +345,7 @@
 		opacity: 1;
 	}
 
-  .arrow.down:hover:before {
+	.arrow.down:hover:before {
 		opacity: 1;
 	}
 
@@ -437,8 +428,8 @@
 		top: 10px;
 		left: 10px;
 	}
-  
-  [data-tooltip] {
+
+	[data-tooltip] {
 		position: relative;
 		cursor: pointer;
 	}
@@ -522,14 +513,14 @@
 		transform: translateY(-50%);
 	}
 
-  .resume-header {
+	.resume-header {
 		position: absolute;
 		top: 60px; /* Adjust as needed */
 		left: 80px; /* Adjust as needed */
 		font-size: 1.5em; /* Adjust as class*/
 	}
 
-  .resume-pdf {
+	.resume-pdf {
 		width: 80vw; /* 80% of viewport width */
 		height: 80vh; /* 80% of viewport height */
 		margin: 10vh auto; /* vertically center */
@@ -550,7 +541,7 @@
 		height: auto; /* Maintain aspect ratio */
 	}
 
-  .toggle-pdf {
+	.toggle-pdf {
 		position: absolute;
 		top: 105px; /* Adjust as needed */
 		left: 80px; /* Adjust as needed */
@@ -560,6 +551,4 @@
 		border-radius: 4px;
 		font-size: 10px;
 	}
-
 </style>
-
