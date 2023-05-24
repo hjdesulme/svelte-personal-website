@@ -1,11 +1,11 @@
 <!-- SquareComponent.svelte -->
 <script>
-  export let name = '';
-  export let onClick = () => {};
+  export let squareName;
+  export let selectSquare;
 </script>
 
-<div class="square" on:click={(event) => onClick(name, event)}>
-  {name}
+<div class="square" on:click={(event) => selectSquare(squareName, event)}>
+  {squareName}
 </div>
 
 <style>
