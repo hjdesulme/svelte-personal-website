@@ -111,9 +111,12 @@ ____________________________
 
 Prompts:
 
-Let's work on the content on the expanded Resume page. It should have a PDF document placed in its center that takes up most of the screen. If a user clicks it, the PDF opens up full screen like how it is on Google Drive or something (or whatever that PDF view is that lets users download or print the file).
+Help me remove that little "resume" text. In fact, of all those little square text elements. 
+- And let me only have the proper header in the same corner as the X button.
+  - Fix the positioning of the PDF/PNG switcher button.
+    - Maybe fix the style too. ("To PDF" <-> "To PNG"? Idk.)
 
-Let's work on the content on the expanded Blog page. I want to have the title of the blog 
+Let's work on the content on the expanded Blog page. I want to have the title of the blog and the date right above it.
 
 Let's work on the content on the expanded Projects page.
 

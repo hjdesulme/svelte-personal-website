@@ -169,7 +169,7 @@
 				duration: 500,
 			}}
 		>
-			{selectedSquare}
+			<!-- {selectedSquare} -->
 			{#if selectedSquare === "resume"}
 				<button
 					class="close-button top-left"
@@ -209,8 +209,8 @@
 				</button>
 
 				<button class="toggle-pdf" on:click={togglePdfImage}>
-					{#if showPdf} Show Image {/if}
-					{#if !showPdf} Show PDF {/if}
+					{#if showPdf} To Image {/if}
+					{#if !showPdf} To PDF {/if}
 				</button>
 
 				{#if showPdf}
@@ -771,14 +771,14 @@
 
 	.resume-header {
 		position: absolute;
-		top: 60px; /* Adjust as needed */
+		top: 50px; /* Adjust as needed */
 		left: 80px; /* Adjust as needed */
 		font-size: 1.5em; /* Adjust as class*/
 	}
 
 	.toggle-pdf {
 		position: absolute;
-		top: 105px; /* Adjust as needed */
+		top: 95px; /* Adjust as needed */
 		left: 80px; /* Adjust as needed */
 		background: #333;
 		color: white;
@@ -788,7 +788,7 @@
 	}
 
 	.resume-pdf {
-		width: 80vw; /* 80% of viewport width */
+		width: 70vw; /* 80% of viewport width */
 		height: 80vh; /* 80% of viewport height */
 		margin: 10vh auto; /* vertically center */
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); /* optional shadow for effect */
