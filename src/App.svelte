@@ -10,12 +10,7 @@
 	let selectedSquareDetails = {};
 	let renderFullScreenSquare = false;
 	let pdfURL = "/My_Resume.pdf";
-	let showPdf = false; // initially set to false
 
-	// Toggle function
-	function togglePdfImage() {
-		showPdf = !showPdf;
-	}
 	function toggleFullScreenSquare() {
 		renderFullScreenSquare = false;
 		setTimeout(() => {
@@ -208,33 +203,10 @@
 					↘
 				</button>
 
-				<button class="toggle-pdf" on:click={togglePdfImage}>
-					{#if showPdf} Show Image {/if}
-					{#if !showPdf} Show PDF {/if}
-				</button>
-
-				{#if showPdf}
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<object
-						data={"/My_Resume.pdf"}
-						type="application/pdf"
-						class="resume-pdf"
-					>
-						<!-- Display this message if the user's browser can't display the PDF -->
-						<p>It appears your web browser doesn't support iframes.</p>
-					</object>
-				{/if}
-
-				{#if !showPdf}
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<a href={pdfURL} target="_blank">
-						<img
-							class="resume-png"
-							src="/My_Resume.png"
-							alt="Resume thumbnail"
-						/>
-					</a>
-				{/if}
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<a href={pdfURL} target="_blank">
+					<img class="resume-png" src="/My_Resume.png" alt="Resume thumbnail" />
+				</a>
 			{/if}
 
 			{#if selectedSquare === "blog"}
@@ -774,24 +746,6 @@
 		top: 60px; /* Adjust as needed */
 		left: 80px; /* Adjust as needed */
 		font-size: 1.5em; /* Adjust as class*/
-	}
-
-	.toggle-pdf {
-		position: absolute;
-		top: 105px; /* Adjust as needed */
-		left: 80px; /* Adjust as needed */
-		background: #333;
-		color: white;
-		padding: 5px 8px;
-		border-radius: 4px;
-		font-size: 10px;
-	}
-
-	.resume-pdf {
-		width: 80vw; /* 80% of viewport width */
-		height: 80vh; /* 80% of viewport height */
-		margin: 10vh auto; /* vertically center */
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); /* optional shadow for effect */
 	}
 
 	.resume-png {
