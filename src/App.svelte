@@ -1,13 +1,16 @@
 <script>
-	import { screenStore } from "./store.js";
+	import { screenStore, selectedSquareStore } from "./store.js";
 	import Switch from "svelte-switch";
 	import { fly } from "svelte/transition";
 	import CenterText from "./CenterText.svelte";
+	// import { Router, Route } from "svelte-routing";
 	import BlogList from "./Blog/BlogList.svelte";
+	// import BlogPost from "./Blog/BlogPost.svelte";
+	import { get, writable } from "svelte/store";
+
 
 	let showInfo = false;
 	let showSwitch = true;
-	let selectedSquare = null;
 	let selectedSquareDetails = {};
 	let renderFullScreenSquare = false;
 	let pdfURL = "/My_Resume.pdf";
@@ -52,7 +55,11 @@
 	};
 
 	function selectSquare(square, event, direction = null) {
-		if (selectedSquare) {
+		if ($selectedSquareStore) {
+			if ($selectedSquareStore === "blog") {
+				selectedSquareStore.set(null);
+			}
+
 			let newTop = window.scrollY,
 				newLeft = window.scrollX;
 
@@ -103,16 +110,17 @@
 			};
 		}
 
-		selectedSquare = square;
+		selectedSquareStore.set(square); // Update selectedSquareStore value
 		showSwitch = false;
-		if (selectedSquare) {
+		if ($selectedSquareStore) {
+			// Access selectedSquareStore value
 			toggleFullScreenSquare();
 		}
 	}
 
 	function deselectSquare(event) {
 		event.stopPropagation();
-		selectedSquare = null;
+		selectedSquareStore.set(null); // Update selectedSquareStore value
 		showSwitch = true;
 	}
 
@@ -142,7 +150,7 @@
 		</div>
 		<CenterText {showInfo} />
 	</div>
-	{#if selectedSquare != null && renderFullScreenSquare}
+	{#if $selectedSquareStore != null && renderFullScreenSquare}
 		<div
 			class="fullScreenSquare"
 			key={selectedSquareDetails.top + "," + selectedSquareDetails.left}
@@ -165,7 +173,7 @@
 				duration: 500,
 			}}
 		>
-			{#if selectedSquare === "resume"}
+			{#if $selectedSquareStore === "resume"}
 				<button
 					class="close-button top-left"
 					data-tooltip-resume="Back to Home"
@@ -209,12 +217,15 @@
 				</a>
 			{/if}
 
-			{#if selectedSquare === "blog"}
+			<!-- SNIP -->
+			{#if $selectedSquareStore === "blog"}
 				<button
 					class="close-button top-right"
 					data-tooltip-blog="Back to Home"
-					on:click|stopPropagation={deselectSquare}>X</button
+					on:click|stopPropagation={deselectSquare}
 				>
+					X
+				</button>
 
 				<h1 class="blog-header">Blog</h1>
 
@@ -222,27 +233,36 @@
 					class="arrow down"
 					data-tooltip="Down to 'Contact'"
 					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.down, null, "down")}>↓</button
+						selectSquare(directions.blog.down, null, "down")}
 				>
+					↓
+				</button>
 
 				<button
 					class="arrow left"
 					data-tooltip="Take a left to 'Resume'"
 					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.left, null, "left")}>←</button
+						selectSquare(directions.blog.left, null, "left")}
 				>
+					←
+				</button>
 
 				<button
 					class="arrow down-left"
 					data-tooltip="Slide over to 'Projects'"
 					on:click|stopPropagation={() =>
-						selectSquare(directions.blog.downLeft, null, "downLeft")}>↙</button
+						selectSquare(directions.blog.downLeft, null, "downLeft")}
 				>
+					↙
+				</button>
 
-				<BlogList />
+				{#if $selectedSquareStore === "blog" && renderFullScreenSquare}
+					<BlogList />
+				{/if}
 			{/if}
+			<!-- SNIP -->
 
-			{#if selectedSquare === "projects"}
+			{#if $selectedSquareStore === "projects"}
 				<button
 					class="close-button bottom-left"
 					data-tooltip-projects="Back to Home"
@@ -274,7 +294,7 @@
 				>
 			{/if}
 
-			{#if selectedSquare === "contact"}
+			{#if $selectedSquareStore === "contact"}
 				<button
 					class="close-button bottom-right"
 					data-tooltip-contact="Back to Home"
