@@ -111,9 +111,7 @@ ____________________________
 
 Prompts:
 
-Let's work on the content on the expanded Resume page. It should have a PDF document placed in its center that takes up most of the screen. If a user clicks it, the PDF opens up full screen like how it is on Google Drive or something (or whatever that PDF view is that lets users download or print the file).
-
-Let's work on the content on the expanded Blog page. I want to have the title of the blog 
+Let's work on the content on the expanded Blog page. I want to have the title of the blog, underneath the date of the blog.
 
 Let's work on the content on the expanded Projects page.
 
@@ -123,7 +121,7 @@ I'd you to add a preview of each square on the 2x2 grid home page.
 
 I'd like you to add an optional traditional menu bar on each expanded square.
 
-Can we add a second switch component for Haitian Creole mode (where all of the text on the page - including the blogs - is converted to Haitian Creole)?
+Can we add a second switch component for Haitian Creole mode (where all of the text on the page - including the blogs - is converted to Haitian Creole)? The switcher will be the Haitian flag emoji. And the switch back will be the U.S. flag emoji.
 
 And a third switch component for dark mode?
 
