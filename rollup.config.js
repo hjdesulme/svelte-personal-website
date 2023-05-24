@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { spawn } from 'child_process';
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
@@ -6,6 +8,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
 import url from 'rollup-plugin-url';
+
+import {routify} from '@roxi/routify';
+
 
 const production = !process.env.ROLLUP_WATCH;
 

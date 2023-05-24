@@ -3,6 +3,7 @@
 	import Switch from "svelte-switch";
 	import { fly } from "svelte/transition";
 	import CenterText from "./CenterText.svelte";
+	import BlogList from "./Blog/BlogList.svelte";
 
 	let showInfo = false;
 	let showSwitch = true;
@@ -164,7 +165,6 @@
 				duration: 500,
 			}}
 		>
-
 			{#if selectedSquare === "resume"}
 				<button
 					class="close-button top-left"
@@ -215,7 +215,7 @@
 					data-tooltip-blog="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				
+
 				<h1 class="blog-header">Blog</h1>
 
 				<button
@@ -238,6 +238,8 @@
 					on:click|stopPropagation={() =>
 						selectSquare(directions.blog.downLeft, null, "downLeft")}>↙</button
 				>
+
+				<BlogList />
 			{/if}
 
 			{#if selectedSquare === "projects"}
@@ -278,9 +280,9 @@
 					data-tooltip-contact="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				
+
 				<h1 class="contact-header">Contact</h1>
-				
+
 				<button
 					class="arrow up"
 					data-tooltip="Jump up to 'Blog'"
