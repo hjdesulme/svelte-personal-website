@@ -121,6 +121,8 @@ Let's work on the content on the expanded Contact page.
   - On submit:
     - automatically emails me
     - stores info in a lightweight DB that I can check
+    - validation around email format & existence and message existence 
+    - name & subject can be left blank
 
 
 RESPONSIVENESS
@@ -148,7 +150,9 @@ Are these two many swictch components?
   - Prompt: Can you make the switch component(s) draggable across of the screen? But always reset it at the top right when I navigate elsewhere (to a square)?
 - Maybe add a fourth switcher to have one in every corner
 
+Accessibility check on everything
 
+Security check on everything
 
 UNSURE ABOUT THESE
 

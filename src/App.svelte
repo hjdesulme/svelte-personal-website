@@ -21,11 +21,10 @@
 	let blogPosts = [];
 	let post;
 	let htmlContent;
-
-	const unsubscribe = selectedBlogPost.subscribe((value) => {
-		post = value;
-		htmlContent = value ? documentToHtmlString(value.content) : "";
-	});
+	let name = "";
+	let email = "";
+	let message = "";
+	let subject = "";
 
 	// Store square directions
 	let directions = {
@@ -68,57 +67,48 @@
 	});
 
 	onMount(() => {
-	// Define a new function to handle keydown events
-	function keydownHandler(e) {
-		if (selectedSquare) {
-			switch (e.key) {
-				case "Escape":
-					deselectSquare();
-					break;
-				case "ArrowUp":
-					if (directions[selectedSquare].up) {
-						selectSquare(directions[selectedSquare].up, null, "up");
-					}
-					break;
-				case "ArrowDown":
-					if (directions[selectedSquare].down) {
-						selectSquare(directions[selectedSquare].down, null, "down");
-					}
-					break;
-				case "ArrowLeft":
-					if (directions[selectedSquare].left) {
-						selectSquare(directions[selectedSquare].left, null, "left");
-					}
-					break;
-				case "ArrowRight":
-					if (directions[selectedSquare].right) {
-						selectSquare(directions[selectedSquare].right, null, "right");
-					}
-					break;
+		// Define a new function to handle keydown events
+		function keydownHandler(e) {
+			if (selectedSquare) {
+				switch (e.key) {
+					case "Escape":
+						deselectSquare();
+						break;
+					case "ArrowUp":
+						if (directions[selectedSquare].up) {
+							selectSquare(directions[selectedSquare].up, null, "up");
+						}
+						break;
+					case "ArrowDown":
+						if (directions[selectedSquare].down) {
+							selectSquare(directions[selectedSquare].down, null, "down");
+						}
+						break;
+					case "ArrowLeft":
+						if (directions[selectedSquare].left) {
+							selectSquare(directions[selectedSquare].left, null, "left");
+						}
+						break;
+					case "ArrowRight":
+						if (directions[selectedSquare].right) {
+							selectSquare(directions[selectedSquare].right, null, "right");
+						}
+						break;
+				}
 			}
 		}
-	}
 
-	// Add the event listener
-	window.addEventListener("keydown", keydownHandler);
+		// Add the event listener
+		window.addEventListener("keydown", keydownHandler);
 
-	// Make sure to remove the event listener when the component is destroyed
-	return () => {
-		window.removeEventListener("keydown", keydownHandler);
-	};
-});
+		// Make sure to remove the event listener when the component is destroyed
+		return () => {
+			window.removeEventListener("keydown", keydownHandler);
+		};
+	});
 
-	async function fetchBlogPosts() {
-		const response = await contentfulClient.getEntries({
-			content_type: "blogPost",
-		});
-		blogPosts = response.items.map((item) => {
-			let post = item.fields;
-			let date = new Date(post.date);
-			let options = { year: "numeric", month: "long", day: "numeric" };
-			post.date = date.toLocaleDateString("en-US", options);
-			return post;
-		});
+	function toggleShowInfo() {
+		showInfo = !showInfo;
 	}
 
 	function toggleFullScreenSquare() {
@@ -192,14 +182,34 @@
 			event.stopPropagation();
 		}
 		selectedSquare = null;
-		showInfo = false;  // Add this line to hide the center text when a square is closed
+		showInfo = false; // Add this line to hide the center text when a square is closed
 		showSwitch = true;
 	}
 
-	function toggleShowInfo() {
-		showInfo = !showInfo;
+	async function fetchBlogPosts() {
+		const response = await contentfulClient.getEntries({
+			content_type: "blogPost",
+		});
+		blogPosts = response.items.map((item) => {
+			let post = item.fields;
+			let date = new Date(post.date);
+			let options = { year: "numeric", month: "long", day: "numeric" };
+			post.date = date.toLocaleDateString("en-US", options);
+			return post;
+		});
 	}
 
+	const unsubscribe = selectedBlogPost.subscribe((value) => {
+		post = value;
+		htmlContent = value ? documentToHtmlString(value.content) : "";
+	});
+
+	function submitForm() {
+		// Handle form submission logic here. For example, you might want to send an HTTP request to your server.
+		console.log(
+			`Name: ${name}, Email: ${email}, Subject: ${subject}, Message: ${message}`
+		);
+	}
 </script>
 
 {#if $screenStore === "desktop"}
@@ -410,6 +420,31 @@
 					on:click|stopPropagation={() =>
 						selectSquare(directions.contact.upLeft, null, "upLeft")}>↖</button
 				>
+
+				<div class="contact-form">
+					<label for="name">Name</label>
+					<input id="name" bind:value={name} placeholder="Your Name" />
+
+					<label for="email">Email</label>
+					<input
+						id="email"
+						bind:value={email}
+						type="email"
+						placeholder="Your Email"
+					/>
+
+					<label for="subject">Subject</label>
+					<input id="subject" bind:value={subject} placeholder="Subject" />
+
+					<label for="message">Message</label>
+					<textarea
+						id="message"
+						bind:value={message}
+						placeholder="Your Message"
+					/>
+
+					<button class="submit-btn" on:click={submitForm}>Submit</button>
+				</div>
 			{/if}
 		</div>
 	{/if}
@@ -960,4 +995,48 @@
 		right: 180px; /* Adjust as needed */
 		/*font-size: 1.5em; /* Adjust as class*/
 	}
+
+	.contact-form {
+	display: flex;
+	flex-direction: column;
+	width: 60%;
+	height: 60%;
+	margin: auto;
+	padding: 10px;
+}
+
+.contact-form label {
+	display: block;
+	margin-bottom: 5px; /* Space beneath the label */
+	font-weight: bold;
+}
+
+.contact-form input,
+.contact-form textarea {
+	padding: 5px;
+	width: 100%;
+	border: 2px solid #333;
+	border-radius: 4px;
+	margin-bottom: 15px; /* Space beneath each input field and textarea */
+}
+
+.contact-form textarea {
+	height: 150px;
+	margin-bottom: 5px; /* Reduce space beneath the textarea */
+}
+
+.submit-btn {
+	padding: 5px 10px;
+	align-self: flex-start;
+	cursor: pointer;
+	background-color: #444;
+	color: white;
+	transition-duration: 0.4s;
+	border: none;
+	border-radius: 4px;
+}
+
+.submit-btn:hover {
+	background-color: #555;
+}
 </style>
