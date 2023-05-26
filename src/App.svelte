@@ -25,6 +25,7 @@
 	let email = "";
 	let message = "";
 	let subject = "";
+	let inputFocus = false;
 
 	// Store square directions
 	let directions = {
@@ -69,7 +70,7 @@
 	onMount(() => {
 		// Define a new function to handle keydown events
 		function keydownHandler(e) {
-			if (selectedSquare) {
+			if (!inputFocus && selectedSquare) {
 				switch (e.key) {
 					case "Escape":
 						deselectSquare();
@@ -203,6 +204,14 @@
 		post = value;
 		htmlContent = value ? documentToHtmlString(value.content) : "";
 	});
+
+	function focusHandler() {
+		inputFocus = true;
+	}
+
+	function blurHandler() {
+		inputFocus = false;
+	}
 
 	function submitForm() {
 		// Handle form submission logic here. For example, you might want to send an HTTP request to your server.
@@ -423,7 +432,13 @@
 
 				<div class="contact-form">
 					<label for="name">Name</label>
-					<input id="name" bind:value={name} placeholder="Your Name" />
+					<input
+						id="name"
+						bind:value={name}
+						placeholder="Your Name"
+						on:focus={focusHandler}
+						on:blur={blurHandler}
+					/>
 
 					<label for="email">Email</label>
 					<input
@@ -431,16 +446,26 @@
 						bind:value={email}
 						type="email"
 						placeholder="Your Email"
+						on:focus={focusHandler}
+						on:blur={blurHandler}
 					/>
 
 					<label for="subject">Subject</label>
-					<input id="subject" bind:value={subject} placeholder="Subject" />
+					<input
+						id="subject"
+						bind:value={subject}
+						placeholder="Subject"
+						on:focus={focusHandler}
+						on:blur={blurHandler}
+					/>
 
 					<label for="message">Message</label>
 					<textarea
 						id="message"
 						bind:value={message}
 						placeholder="Your Message"
+						on:focus={focusHandler}
+						on:blur={blurHandler}
 					/>
 
 					<button class="submit-btn" on:click={submitForm}>Submit</button>
@@ -921,11 +946,11 @@
 		top: 120px;
 		left: 180px;
 		padding: 1rem; /* Add some space around the content */
-		cursor: pointer;
 	}
-
+	
 	.blog-post {
 		font-size: 12px; /* Change as needed */
+		cursor: pointer;
 	}
 
 	.blog-date {
@@ -952,7 +977,10 @@
 	}
 
 	.blog-post-detail {
-		/* rest of your styles */
+		position: relative;  /* Change absolute to relative */
+		width: 60%;  /* Set a width, adjust as needed */
+		margin: 1rem auto;  /* Set left and right margins to auto */
+		padding: 1rem;
 	}
 	.blog-post-header {
 		/* align-items: center; */
@@ -974,6 +1002,7 @@
 		background-color: #555;
 		color: white;
 	}
+	
 	.blog-content {
 		/* Set a max-height to control when the scrollbar appears */
 		max-height: 500px;
@@ -997,46 +1026,46 @@
 	}
 
 	.contact-form {
-	display: flex;
-	flex-direction: column;
-	width: 60%;
-	height: 60%;
-	margin: auto;
-	padding: 10px;
-}
+		display: flex;
+		flex-direction: column;
+		width: 60%;
+		height: 60%;
+		margin: auto;
+		padding: 10px;
+	}
 
-.contact-form label {
-	display: block;
-	margin-bottom: 5px; /* Space beneath the label */
-	font-weight: bold;
-}
+	.contact-form label {
+		display: block;
+		margin-bottom: 5px; /* Space beneath the label */
+		font-weight: bold;
+	}
 
-.contact-form input,
-.contact-form textarea {
-	padding: 5px;
-	width: 100%;
-	border: 2px solid #333;
-	border-radius: 4px;
-	margin-bottom: 15px; /* Space beneath each input field and textarea */
-}
+	.contact-form input,
+	.contact-form textarea {
+		padding: 5px;
+		width: 100%;
+		border: 2px solid #333;
+		border-radius: 4px;
+		margin-bottom: 15px; /* Space beneath each input field and textarea */
+	}
 
-.contact-form textarea {
-	height: 150px;
-	margin-bottom: 5px; /* Reduce space beneath the textarea */
-}
+	.contact-form textarea {
+		height: 150px;
+		margin-bottom: 5px; /* Reduce space beneath the textarea */
+	}
 
-.submit-btn {
-	padding: 5px 10px;
-	align-self: flex-start;
-	cursor: pointer;
-	background-color: #444;
-	color: white;
-	transition-duration: 0.4s;
-	border: none;
-	border-radius: 4px;
-}
+	.submit-btn {
+		padding: 5px 10px;
+		align-self: flex-start;
+		cursor: pointer;
+		background-color: #444;
+		color: white;
+		transition-duration: 0.4s;
+		border: none;
+		border-radius: 4px;
+	}
 
-.submit-btn:hover {
-	background-color: #555;
-}
+	.submit-btn:hover {
+		background-color: #555;
+	}
 </style>
