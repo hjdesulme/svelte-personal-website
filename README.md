@@ -111,15 +111,32 @@ ____________________________
 
 Prompts:
 
-Let's work on the content on the expanded Blog page. I want to have the title of the blog, underneath the date of the blog.
+PAGES:
 
 Let's work on the content on the expanded Projects page.
+- Might want to use Contentful here as well
 
 Let's work on the content on the expanded Contact page.
+- Just a form
+  - On submit:
+    - automatically emails me
+    - stores info in a lightweight DB that I can check
 
-I'd you to add a preview of each square on the 2x2 grid home page. 
 
-I'd like you to add an optional traditional menu bar on each expanded square.
+RESPONSIVENESS
+
+- zooming in <- especially this (similar/switch to mobile)
+  - Resume
+  - Blog
+  - Projects
+  - Contact
+- zooming out
+
+I'd like you to add an optional traditional menu bar on each expanded square. (especially for responsiveness.)
+
+Flesh out mobile view
+
+SWITCH COMPONENTS
 
 Can we add a second switch component for Haitian Creole mode (where all of the text on the page - including the blogs - is converted to Haitian Creole)? The switcher will be the Haitian flag emoji. And the switch back will be the U.S. flag emoji.
 
@@ -128,9 +145,15 @@ And a third switch component for dark mode?
 Are these two many swictch components? 
 - I'd like them all to be draggable. I think it's fun to have to have these.
   - I want dragging them to involve and pressing and holding them, instead of just clicking them.
+  - Prompt: Can you make the switch component(s) draggable across of the screen? But always reset it at the top right when I navigate elsewhere (to a square)?
+- Maybe add a fourth switcher to have one in every corner
 
-Can you make the switch component(s) draggable across of the screen? But always reset it at the top right when I navigate elsewhere (to a square)?
 
-[Currently, when I click the "X" button, the navigation is based on the direction that I just came from. So for example, if I go to down from Resume to Project, then click "X", the fullScreenSquare will slide out from top to bottom as it returns to the main screen.  
 
-I don't know if this should be desirable. Wouldn't it be better to, instead, have the Project page close in the downLeft direction? Like no matter where I navigated from?]
+UNSURE ABOUT THESE
+
+1. I'd you to add a preview of each square on the 2x2 grid home page.
+
+2. Currently, when I click the "X" button, the navigation is based on the direction that I just came from. So for example, if I go to down from Resume to Project, then click "X", the fullScreenSquare will slide out from top to bottom as it returns to the main screen.  
+
+I don't know if this should be desirable. Wouldn't it be better to, instead, have the Project page close in the downLeft direction? Like no matter where I navigated from?

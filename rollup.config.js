@@ -1,3 +1,5 @@
+import replace from '@rollup/plugin-replace';
+import { config } from 'dotenv';
 import { spawn } from 'child_process';
 import svelte from 'rollup-plugin-svelte';
 import commonjs from '@rollup/plugin-commonjs';
@@ -6,6 +8,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import css from 'rollup-plugin-css-only';
 import url from 'rollup-plugin-url';
+import svg from 'rollup-plugin-svg';
+
+
+config()
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -78,6 +84,16 @@ export default {
       limit: 0, // with a limit of 0, all files are processed
       include: ['**/*.pdf'], // the glob(s) to files you want to include
       emitFiles: true, // defaults to true
+    }),
+
+		svg(),
+
+		replace({
+      preventAssignment: true,
+      values: {
+        'process.env.CONTENTFUL_SPACE_ID': JSON.stringify(process.env.CONTENTFUL_SPACE_ID),
+        'process.env.CONTENTFUL_ACCESS_TOKEN': JSON.stringify(process.env.CONTENTFUL_ACCESS_TOKEN),
+      }
     }),
 	],
 	watch: {

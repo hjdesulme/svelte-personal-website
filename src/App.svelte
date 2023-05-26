@@ -1,8 +1,16 @@
 <script>
-	import { screenStore } from "./store.js";
+	import { screenStore, selectedBlogPost } from "./store.js";
 	import Switch from "svelte-switch";
 	import { fly } from "svelte/transition";
 	import CenterText from "./CenterText.svelte";
+	import { createClient } from "contentful";
+	import { onMount } from "svelte";
+	import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
+
+	const contentfulClient = createClient({
+		space: process.env.CONTENTFUL_SPACE_ID,
+		accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+	});
 
 	let showInfo = false;
 	let showSwitch = true;
@@ -10,13 +18,14 @@
 	let selectedSquareDetails = {};
 	let renderFullScreenSquare = false;
 	let pdfURL = "/My_Resume.pdf";
+	let blogPosts = [];
+	let post;
+	let htmlContent;
 
-	function toggleFullScreenSquare() {
-		renderFullScreenSquare = false;
-		setTimeout(() => {
-			renderFullScreenSquare = true;
-		}, 0);
-	}
+	const unsubscribe = selectedBlogPost.subscribe((value) => {
+		post = value;
+		htmlContent = value ? documentToHtmlString(value.content) : "";
+	});
 
 	// Store square directions
 	let directions = {
@@ -49,6 +58,75 @@
 			upLeft: "resume",
 		},
 	};
+
+	onMount(async () => {
+		try {
+			await fetchBlogPosts();
+		} catch (error) {
+			console.error("Error fetching blog posts:", error);
+		}
+	});
+
+	onMount(() => {
+	// Define a new function to handle keydown events
+	function keydownHandler(e) {
+		if (selectedSquare) {
+			switch (e.key) {
+				case "Escape":
+					deselectSquare();
+					break;
+				case "ArrowUp":
+					if (directions[selectedSquare].up) {
+						selectSquare(directions[selectedSquare].up, null, "up");
+					}
+					break;
+				case "ArrowDown":
+					if (directions[selectedSquare].down) {
+						selectSquare(directions[selectedSquare].down, null, "down");
+					}
+					break;
+				case "ArrowLeft":
+					if (directions[selectedSquare].left) {
+						selectSquare(directions[selectedSquare].left, null, "left");
+					}
+					break;
+				case "ArrowRight":
+					if (directions[selectedSquare].right) {
+						selectSquare(directions[selectedSquare].right, null, "right");
+					}
+					break;
+			}
+		}
+	}
+
+	// Add the event listener
+	window.addEventListener("keydown", keydownHandler);
+
+	// Make sure to remove the event listener when the component is destroyed
+	return () => {
+		window.removeEventListener("keydown", keydownHandler);
+	};
+});
+
+	async function fetchBlogPosts() {
+		const response = await contentfulClient.getEntries({
+			content_type: "blogPost",
+		});
+		blogPosts = response.items.map((item) => {
+			let post = item.fields;
+			let date = new Date(post.date);
+			let options = { year: "numeric", month: "long", day: "numeric" };
+			post.date = date.toLocaleDateString("en-US", options);
+			return post;
+		});
+	}
+
+	function toggleFullScreenSquare() {
+		renderFullScreenSquare = false;
+		setTimeout(() => {
+			renderFullScreenSquare = true;
+		}, 0);
+	}
 
 	function selectSquare(square, event, direction = null) {
 		if (selectedSquare) {
@@ -110,7 +188,9 @@
 	}
 
 	function deselectSquare(event) {
-		event.stopPropagation();
+		if (event) {
+			event.stopPropagation();
+		}
 		selectedSquare = null;
 		showSwitch = true;
 	}
@@ -164,7 +244,6 @@
 				duration: 500,
 			}}
 		>
-
 			{#if selectedSquare === "resume"}
 				<button
 					class="close-button top-left"
@@ -215,8 +294,36 @@
 					data-tooltip-blog="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				
+
 				<h1 class="blog-header">Blog</h1>
+
+				{#if $selectedBlogPost}
+					<article class="blog-post-detail">
+						<div class="blog-post-header">
+							<button
+								class="back-button"
+								on:click={() => selectedBlogPost.set(null)}>Back</button
+							>
+							<p class="blog-post-title">{post ? post.title : ""}</p>
+							<p class="blog-post-date">{post ? post.date : ""}</p>
+						</div>
+						<div class="blog-content">{@html htmlContent}</div>
+					</article>
+				{:else}
+					<!-- Your blog post list view here -->
+					<div class="blog-posts">
+						{#each blogPosts as post (post.title)}
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
+							<article
+								class="blog-post"
+								on:click={() => selectedBlogPost.set(post)}
+							>
+								<p class="blog-date">{post.date}</p>
+								<p class="blog-title">{post.title}</p>
+							</article>
+						{/each}
+					</div>
+				{/if}
 
 				<button
 					class="arrow down"
@@ -278,9 +385,9 @@
 					data-tooltip-contact="Back to Home"
 					on:click|stopPropagation={deselectSquare}>X</button
 				>
-				
+
 				<h1 class="contact-header">Contact</h1>
-				
+
 				<button
 					class="arrow up"
 					data-tooltip="Jump up to 'Blog'"
@@ -523,10 +630,7 @@
 		white-space: nowrap;
 		opacity: 0;
 		transition: opacity 0.3s;
-		/* Set the width to auto and max-width to 200px so the tooltip size is dynamic */
-		width: min-content; /* dynamic width */
-		/* width: 15vw;  <- These two lines sort of solved the truncation problem. But I didn't really want to have to take this approach. */
-		/* height: 2.5vh;  <- These two lines sort of solved the truncation problem. But I didn't really want to have to take this approach. */
+		width: min-content;
 		max-width: 200px;
 	}
 
@@ -750,7 +854,7 @@
 	.resume-header {
 		position: absolute;
 		top: 60px; /* Adjust as needed */
-		left: 120px; /* Adjust as needed */
+		left: 180px; /* Adjust as needed */
 		/*font-size: 1.5em; /* Adjust as class*/
 	}
 
@@ -771,21 +875,87 @@
 	.blog-header {
 		position: absolute;
 		top: 60px; /* Adjust as needed */
-		right: 120px; /* Adjust as needed */
+		right: 180px; /* Adjust as needed */
 		/*font-size: 1.5em; /* Adjust as class*/
+	}
+
+	.blog-posts {
+		position: absolute;
+		top: 120px;
+		left: 180px;
+		padding: 1rem; /* Add some space around the content */
+		cursor: pointer;
+	}
+
+	.blog-post {
+		font-size: 12px; /* Change as needed */
+	}
+
+	.blog-date {
+		font-size: 1.5em; /* 18/12 = 1.5 */
+		margin-bottom: 8px !important; /* Adjust the margin as needed */
+	}
+
+	.blog-title {
+		font-size: 2em; /* 24/12 = 2 */
+		color: #0081f9;
+		margin-top: 8px !important; /* Adjust the margin as needed */
+	}
+
+	.blog-post-date {
+		font-size: 0.5em; /* 18/12 = 1.5 */
+		margin-top: 4px !important; /* Adjust the margin as needed */
+	}
+
+	.blog-post-title {
+		font-size: 2em; /* 24/12 = 2 */
+		color: #444;
+		margin-top: 8px !important; /* Adjust the margin as needed */
+		margin-bottom: 4px !important; /* Adjust the margin as needed */
+	}
+
+	.blog-post-detail {
+		/* rest of your styles */
+	}
+	.blog-post-header {
+		/* align-items: center; */
+		/* gap: 10px; Adjust the gap between elements as per your requirement */
+		font-size: 14px; /* Change as needed */
+	}
+	.back-button {
+		background-color: #444;
+		color: white;
+		border: none;
+		padding: 8px 16px;
+		text-align: center;
+		font-size: 16px;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		margin-bottom: 0px !important;
+	}
+	.back-button:hover {
+		background-color: #555;
+		color: white;
+	}
+	.blog-content {
+		/* Set a max-height to control when the scrollbar appears */
+		max-height: 500px;
+		/* Add overflow auto to enable scrollbars when the content exceeds the max-height */
+		overflow: auto;
+		padding: 0px 10px 0px 0px;
 	}
 
 	.projects-header {
 		position: absolute;
 		bottom: 60px; /* Adjust as needed */
-		left: 120px; /* Adjust as needed */
+		left: 180px; /* Adjust as needed */
 		/*font-size: 1.5em; /* Adjust as class*/
 	}
 
 	.contact-header {
 		position: absolute;
 		bottom: 60px; /* Adjust as needed */
-		right: 120px; /* Adjust as needed */
+		right: 180px; /* Adjust as needed */
 		/*font-size: 1.5em; /* Adjust as class*/
 	}
 </style>
