@@ -192,12 +192,14 @@
 			event.stopPropagation();
 		}
 		selectedSquare = null;
+		showInfo = false;  // Add this line to hide the center text when a square is closed
 		showSwitch = true;
 	}
 
 	function toggleShowInfo() {
 		showInfo = !showInfo;
 	}
+
 </script>
 
 {#if $screenStore === "desktop"}
