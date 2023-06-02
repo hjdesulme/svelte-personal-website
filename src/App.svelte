@@ -1,5 +1,5 @@
 <script>
-	import { screenStore, selectedBlogPost } from "./store.js";
+	import { screenStore, selectedBlogPost, selectedProject, } from "./store.js";
 	import Switch from "svelte-switch";
 	import { fly } from "svelte/transition";
 	import CenterText from "./CenterText.svelte";
@@ -19,6 +19,7 @@
 	let renderFullScreenSquare = false;
 	let pdfURL = "/My_Resume.pdf";
 	let blogPosts = [];
+	let projects = [];
 	let post;
 	let htmlContent;
 	let name = "";
@@ -64,6 +65,14 @@
 			await fetchBlogPosts();
 		} catch (error) {
 			console.error("Error fetching blog posts:", error);
+		}
+	});
+
+	onMount(async () => {
+		try {
+			await fetchProjects();
+		} catch (error) {
+			console.error("Error fetching projects:", error);
 		}
 	});
 
@@ -198,6 +207,13 @@
 			post.date = date.toLocaleDateString("en-US", options);
 			return post;
 		});
+	}
+
+	async function fetchProjects() {
+		const response = await contentfulClient.getEntries({
+			content_type: "project",
+		});
+		projects = response.items.map((item) => item.fields);
 	}
 
 	const unsubscribe = selectedBlogPost.subscribe((value) => {
@@ -376,6 +392,77 @@
 				>
 
 				<h1 class="projects-header">Projects</h1>
+
+				{#if $selectedProject}
+					<article class="project-detail">
+						<div class="project-header">
+							<button
+								class="back-button"
+								on:click={() => selectedProject.set(null)}>Back</button
+							>
+							<h2>{$selectedProject.name}</h2>
+							<p>{$selectedProject.type}</p>
+						</div>
+						<div class="project-content">
+							<section>
+								<h3>Requirements</h3>
+								<ul>
+									{#each $selectedProject.requirements.split("\n") as requirement}
+										{#if requirement === "Functional" || requirement === "Non-Functional"}
+											<h3>{requirement}</h3>
+										{:else}
+											<li>{requirement}</li>
+										{/if}
+									{/each}
+								</ul>
+							</section>
+							<section>
+								<h3>Tech Stack</h3>
+								<ul class="tech-stack">
+									{#each $selectedProject.techStack.split(", ") as tech}
+										<li>{tech}</li>
+									{/each}
+								</ul>
+							</section>
+							<section>
+								<a class="project-link" href={$selectedProject.link}
+									>Visit Project</a
+								>
+							</section>
+							{#if $selectedProject.impact}
+								<section>
+									<h3>Impact</h3>
+									<p>{$selectedProject.impact}</p>
+								</section>
+							{/if}
+							{#if $selectedProject.media}
+								<section>
+									<h3>Media</h3>
+									<img
+										class="project-media"
+										src={$selectedProject.media.fields.file.url}
+										alt="Project Media"
+									/>
+								</section>
+							{/if}
+						</div>
+					</article>
+				{:else}
+					<div class="project-grid">
+						{#each projects as project (project.name)}
+							<div
+								class="project-card"
+								style="background-image: url({project.image.fields.file.url})"
+								on:click={() => selectedProject.set(project)}
+							>
+								<div class="project-info">
+									<h2>{project.name}</h2>
+									<p>{project.type}</p>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
 
 				<button
 					class="arrow up"
@@ -947,7 +1034,7 @@
 		left: 180px;
 		padding: 1rem; /* Add some space around the content */
 	}
-	
+
 	.blog-post {
 		font-size: 12px; /* Change as needed */
 		cursor: pointer;
@@ -977,9 +1064,9 @@
 	}
 
 	.blog-post-detail {
-		position: relative;  /* Change absolute to relative */
-		width: 60%;  /* Set a width, adjust as needed */
-		margin: 1rem auto;  /* Set left and right margins to auto */
+		position: relative; /* Change absolute to relative */
+		width: 60%; /* Set a width, adjust as needed */
+		margin: 1rem auto; /* Set left and right margins to auto */
 		padding: 1rem;
 	}
 	.blog-post-header {
@@ -1002,7 +1089,7 @@
 		background-color: #555;
 		color: white;
 	}
-	
+
 	.blog-content {
 		/* Set a max-height to control when the scrollbar appears */
 		max-height: 500px;
@@ -1018,6 +1105,119 @@
 		/*font-size: 1.5em; /* Adjust as class*/
 	}
 
+	.project-detail {
+		position: relative;
+		width: 70%;
+		margin: 1rem auto;
+		padding: 1rem;
+		/* background-color: #f5f5f5; */
+		border-radius: 5px;
+	}
+
+	.project-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+		font-family: "Arial", sans-serif;
+	}
+
+	.project-header h2 {
+		margin: 0;
+		color: #333;
+	}
+
+	.project-content {
+		line-height: 1.6;
+		color: #333;
+	}
+
+	.project-content section {
+		margin-bottom: 1rem;
+	}
+
+	.project-content h3 {
+		margin-bottom: 0.5rem;
+		font-size: 1.2rem;
+		color: #555;
+	}
+
+	.project-content ul {
+		padding-left: 1rem;
+	}
+
+	.tech-stack {
+		display: flex;
+		flex-wrap: wrap;
+		list-style: none;
+		padding: 0;
+	}
+
+	.tech-stack li {
+		padding: 5px 10px;
+		margin: 5px;
+		background-color: #e0e0e0;
+		border-radius: 15px;
+	}
+
+	.project-link {
+		display: inline-block;
+		padding: 0.5rem 1rem;
+		color: #fff;
+		background-color: #3f51b5;
+		border-radius: 5px;
+		text-decoration: none;
+	}
+
+	.project-media {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.project-name,
+	.project-type {
+		font-size: 1.25rem;
+		margin-bottom: 1rem;
+	}
+
+	.project-grid {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 5rem; /* Increase gap between cards */
+		width: 100%;
+	}
+
+	.project-card {
+		position: relative;
+		height: 250px; /* Increase card height */
+		width: 250px; /* Increase card width */
+		background-size: cover;
+		background-position: center;
+		transition: box-shadow 0.3s ease-in-out;
+		cursor: pointer;
+	}
+
+	.project-card:hover {
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+	}
+
+	.project-info {
+		position: absolute;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.7);
+		width: 100%;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+		text-align: center;
+		color: white;
+	}
+
+	.project-info h2,
+	.project-info p {
+		margin: 0;
+	}
+
 	.contact-header {
 		position: absolute;
 		bottom: 60px; /* Adjust as needed */
@@ -1029,7 +1229,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 60%;
-		height: 60%;
+		height: 50%;
 		margin: auto;
 		padding: 10px;
 	}

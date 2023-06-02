@@ -5,3 +5,4 @@ let initialScreenSize = window.innerWidth < 800 ? 'mobile' : 'desktop';
 
 export const screenStore = writable(initialScreenSize);
 export const selectedBlogPost = writable(null);
+export const selectedProject = writable(null);
