@@ -5,7 +5,6 @@
 	import CenterText from "./CenterText.svelte";
 	import { createClient } from "contentful";
 	import { onMount } from "svelte";
-	import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 
 	const contentfulClient = createClient({
 		space: process.env.CONTENTFUL_SPACE_ID,
@@ -215,11 +214,6 @@
 		});
 		projects = response.items.map((item) => item.fields);
 	}
-
-	const unsubscribe = selectedBlogPost.subscribe((value) => {
-		post = value;
-		htmlContent = value ? documentToHtmlString(value.content) : "";
-	});
 
 	function focusHandler() {
 		inputFocus = true;
